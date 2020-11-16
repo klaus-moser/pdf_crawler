@@ -1,4 +1,6 @@
 # basic_backend.py
+from pathlib import Path
+
 import mvc_exceptions as mvc_exc
 from re import findall
 from os import remove, walk
@@ -9,6 +11,11 @@ from PyPDF2 import PdfFileReader
 items = list()
 pdfs = list()
 default = str()
+
+
+def get_home_dir():
+    """Return the home directory of the system."""
+    return str(Path.home())
 
 
 def set_default_path(path):

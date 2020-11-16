@@ -19,5 +19,9 @@ class NoDefaultPathSet(Exception):
     pass
 
 
+class FileDialogError(Exception):
+    pass
+
+
 if __name__ == "__main__":
     print(__file__)

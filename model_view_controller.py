@@ -1,6 +1,8 @@
 # model_view_controller.py
 import sys
 from os.path import dirname, abspath
+from pathlib import Path
+
 import basic_backend
 import mvc_exceptions as mvc_exc
 from PyQt5.QtGui import QIcon, QPixmap
@@ -32,6 +34,9 @@ class ModelBasic:
 
     def delete_log(self):
         basic_backend.delete_log()
+
+    def get_home_dir(self):
+        return basic_backend.get_home_dir()
 
 
 class View(QMainWindow):
@@ -124,6 +129,10 @@ class View(QMainWindow):
             self.display.appendPlainText(t)
         self.display.setFocus()
 
+    def set_path_text(self, path):
+        """Set the text in the path label."""
+        self.path_box.setText(path)
+
     def display_text(self):
         """Get display's text."""
         return self.display.toPlainText()
@@ -131,6 +140,10 @@ class View(QMainWindow):
     def clear_display(self):
         """Clear the display."""
         self.setDisplayText("")
+
+    def show_file_dialog(self, home_dir):
+        """Show file dialog."""
+        return QFileDialog.getExistingDirectory(self, 'Open file', home_dir)
 
 
 class Controller(object):
@@ -148,6 +161,7 @@ class Controller(object):
         pass
 
     def _start(self):
+        """Start Crawling."""
         try:
             path = dirname(abspath(__file__)) + r"\TEST_FILES"
             word = "Data"
@@ -156,18 +170,19 @@ class Controller(object):
             self._view.set_display_text(res)
         except mvc_exc.NoResults as err:
             self._view.set_display_text(err)
-    """
-    def show_item(self, item_name):
+
+    def _choose_filepath(self):
+        """Select the search path."""
+        home_dir = self.model.get_home_dir()
         try:
-            item = self.model.read_item(item_name)
-            item_type = self.model.item_type
-            self.view.show_item(item_type, item_name, item)
-        except mvc_exc.ItemNotStored as e:
-            self.view.display_missing_item_error(item_name, e)
-    """
+            search_path = self._view.show_file_dialog(home_dir)
+            self._view.set_path_text(search_path)
+        except mvc_exc.FileDialogError as err:
+            self._view.set_display_text(err)
+
     def _connect_signals(self):
         """Connect signals and slots."""
-        #self._view.buttons["Search"].clicked.connect()
+        self._view.buttons["Search"].clicked.connect(self._choose_filepath)
         #self._view.buttons["Default"].clicked.connect()
         self._view.buttons["Start"].clicked.connect(self._start)
         #self._view.buttons["Cancel"].clicked.connect()
