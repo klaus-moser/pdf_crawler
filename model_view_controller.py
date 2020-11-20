@@ -6,7 +6,7 @@ from pathlib import Path
 import basic_backend
 import mvc_exceptions as mvc_exc
 from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QApplication, QPlainTextEdit, QLabel, QTextEdit, QFileDialog
+from PyQt5.QtWidgets import QApplication, QPlainTextEdit, QLabel, QTextEdit, QFileDialog, QCheckBox
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QPushButton
@@ -55,12 +55,13 @@ class View(QMainWindow):
         # Set the central widget and the general layout
         self._centralWidget = QWidget(self)
 
-        # Create the display, input, buttons etc.
+        # Create the display, input, buttons, checkboxes etc.
         self._create_result_display()
         self._create_buttons()
         self._create_input_box()
         self._set_labels()
         self._create_path_box()
+        self._create_checkboxes()
         # Add to screen/central widget
         self.setCentralWidget(self._centralWidget)
 
@@ -68,14 +69,17 @@ class View(QMainWindow):
         """Set all labels"""
         # Create the label widget(s)
         self.label = QLabel(self._centralWidget)
+        self.label_info = QLabel(self._centralWidget)
         self.label_path = QLabel(self._centralWidget)
         self.label_word = QLabel(self._centralWidget)
         # Set label properties
+        self.label_info.setGeometry(10, 170, 300, 20)
         self.label.setGeometry(10, 10, 611, 141)
         self.label_path.setGeometry(10, 210, 47, 13)
         self.label_word.setGeometry(10, 250, 47, 13)
         # Set label texts
         self.label.setText("")
+        self.label_info.setText("Choose between:")
         self.label_path.setText("Path:")
         self.label_word.setText("Word:")
         # Set logo file
@@ -87,14 +91,14 @@ class View(QMainWindow):
         # Create the path widget
         self.path_box = QTextEdit(self._centralWidget)
         # Set some properties
-        self.path_box.setGeometry(55, 200, 391, 31)
+        self.path_box.setGeometry(55, 200, 380, 31)
 
     def _create_input_box(self):
         """Create Input Box for the word"""
         # Create the display widget
         self.input_box_word = QLineEdit(self._centralWidget)
         # Set some display's properties
-        self.input_box_word.setGeometry(55, 240, 391, 31)
+        self.input_box_word.setGeometry(55, 240, 380, 31)
 
     def _create_result_display(self):
         """Create the box to show the results"""
@@ -109,18 +113,33 @@ class View(QMainWindow):
         self.buttons = {}
         # Button text | position
         buttons = {
-            "Search": (460, 200, 75, 31),
-            "Default": (540, 200, 75, 31),
-            "Start": (460, 240, 75, 31),
-            "End": (550, 560, 75, 31),
-            "Cancel": (10, 560, 75, 31),
-            "Save": (460, 560, 75, 31),
+            "Browse": (445, 200, 85, 31),
+            "Set Default": (537, 200, 85, 31),
+            "Start": (445, 240, 85, 31),
+            "Info": (537, 160, 85, 31),
+            "End": (537, 560, 85, 31),
+            "Cancel": (10, 560, 85, 31),
+            "Save as .txt": (435, 560, 95, 31),
+            "Clear": (537, 240, 85, 31)
         }
         # Create the buttons
         for btnText, pos in buttons.items():
             self.buttons[btnText] = QPushButton(self._centralWidget)
             self.buttons[btnText].setText(btnText)
             self.buttons[btnText].setGeometry(pos[0], pos[1], pos[2], pos[3])
+
+    def _create_checkboxes(self):
+        """Create all check boxes."""
+        self.checkbox_file = QCheckBox(self._centralWidget)
+        self.checkbox_dir = QCheckBox(self._centralWidget)
+        self.checkbox_file.setGeometry(260, 170, 100, 20)
+        self.checkbox_dir.setGeometry(150, 170, 100, 20)
+        # Set text
+        self.checkbox_dir.setText("Directory")
+        self.checkbox_file.setText("File")
+        # Default state checkboxes
+        self.checkbox_dir.setChecked(True)
+        self.checkbox_file.setChecked(False)
 
     def set_display_text(self, text):
         """Set display's text."""
@@ -143,7 +162,7 @@ class View(QMainWindow):
 
     def show_file_dialog(self, home_dir):
         """Show file dialog."""
-        return QFileDialog.getExistingDirectory(self, 'Open file', home_dir)
+        return QFileDialog.getExistingDirectory(self, 'Choose folder', home_dir)
 
 
 class Controller(object):
@@ -182,13 +201,13 @@ class Controller(object):
 
     def _connect_signals(self):
         """Connect signals and slots."""
-        self._view.buttons["Search"].clicked.connect(self._choose_filepath)
-        #self._view.buttons["Default"].clicked.connect()
+        self._view.buttons["Browse"].clicked.connect(self._choose_filepath)
+        #self._view.buttons["Set Default"].clicked.connect()
         self._view.buttons["Start"].clicked.connect(self._start)
         #self._view.buttons["Cancel"].clicked.connect()
-        #self._view.buttons["Save"].clicked.connect()
+        # self._view.buttons["Info"].clicked.connect()
+        #self._view.buttons["Save as .txt"].clicked.connect()
         self._view.buttons["End"].clicked.connect(self._view.close)
-
         self._view.input_box_word.returnPressed.connect(self._start)
 
 
