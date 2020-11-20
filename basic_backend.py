@@ -12,6 +12,15 @@ items = list()
 pdfs = list()
 default = str()
 
+def get_info_text():
+    """Opens the info.txt and returns its content."""
+    dir_ = "./info.txt"
+
+    if exists(dir_):
+        with open(file=dir_, mode='r', encoding='utf-8') as f:
+            f.readlines()
+
+
 
 def get_home_dir():
     """Return the home directory of the system."""

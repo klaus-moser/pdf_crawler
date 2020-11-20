@@ -3,10 +3,12 @@ import sys
 from os.path import dirname, abspath
 from pathlib import Path
 
+from PyQt5 import QtGui
+
 import basic_backend
 import mvc_exceptions as mvc_exc
 from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QApplication, QPlainTextEdit, QLabel, QTextEdit, QFileDialog, QCheckBox
+from PyQt5.QtWidgets import QApplication, QPlainTextEdit, QLabel, QTextEdit, QFileDialog, QCheckBox, QMessageBox
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QPushButton
@@ -18,6 +20,9 @@ __author__ = "Klaus Moser"
 
 
 class ModelBasic:
+
+    def get_info_text(self):
+        pass
 
     def set_default_path(self, path):
         basic_backend.set_default_path(path=path)
@@ -60,8 +65,15 @@ class View(QMainWindow):
         self._set_labels()
         self._create_path_box()
         self._create_checkboxes()
+        # Create pop-ups
+        self._create_pop_ups()
         # Add to screen/central widget
         self.setCentralWidget(self._centralWidget)
+
+    def _create_pop_ups(self):
+        """Create & init the pop-up windows."""
+        self.info_pop_up = QMessageBox(self._centralWidget)
+        self.info_pop_up.setWindowTitle("Information")
 
     def _set_labels(self):
         """Set all labels"""
@@ -176,6 +188,11 @@ class View(QMainWindow):
         """Show file dialog."""
         return QFileDialog.getExistingDirectory(self, 'Choose folder', home_dir)
 
+    def show_information(self, text):
+        """Pop-Up window to show usage and general information."""
+        self.info_pop_up.setText(text)
+        self.info_pop_up.show()
+
 
 class Controller(object):
 
@@ -211,19 +228,28 @@ class Controller(object):
         except mvc_exc.FileDialogError as err:
             self._view.set_display_text(err)
 
+    def _show_info(self):
+        """Show the Information Pop-Up."""
+        try:
+            text = self.model.get_info_text()
+            self._view.show_information(text)
+        except FileNotFoundError as err:
+            self._view.set_display_text(err)
+
     def _connect_signals(self):
         """Connect signals and slots."""
         self._view.buttons["Browse"].clicked.connect(self._choose_filepath)
         # self._view.buttons["Set Default"].clicked.connect()
         self._view.buttons["Start"].clicked.connect(self._start)
         # self._view.buttons["Cancel"].clicked.connect()
-        # self._view.buttons["Info"].clicked.connect()
+        self._view.buttons["Info"].clicked.connect(self._show_info)
         # self._view.buttons["Save as .txt"].clicked.connect()
         self._view.buttons["End"].clicked.connect(self._view.close)
         self._view.input_box_word.returnPressed.connect(self._start)
         # Checkboxes: The source object of signal is passed to the function using lambda
         self._view.checkbox_dir.stateChanged.connect(lambda: self._view.btn_state(self._view.checkbox_dir))
         self._view.checkbox_file.toggled.connect(lambda: self._view.btn_state(self._view.checkbox_file))
+
 
 if __name__ == "__main__":
     # Create an instance of 'QApplication'

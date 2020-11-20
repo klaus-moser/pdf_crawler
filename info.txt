@@ -1,0 +1,20 @@
+Behold:
+
+__name__    = "pdf_crawler"
+__version__ = "0.1"
+__author__  = "Klaus Moser"
+__date__    = 20-11-2020
+
+
+
+Directory  [X]    =	Choose a directory to find all .pdf and crawl them.
+File	   [X]	  =	Choose a single .pdf-file to be crawled.
+
+[   Info     ]    =	That information you are currently reading. Baka!
+[   Browse   ]	  =	Choose a {Directory, File} that should be crawled.
+[Set Default ]	  =	Set current {Directory, File} as default path. Will be re-called in next start-up. Wow! Right?
+[   Start    ]	  =	Crawl.
+[   Clear    ]	  =	Remove those unlucky results.
+[   Cancel   ]	  =	Stop that filthy crawling.
+[Save as .txt]	  =	Save unlucky, filthy results in a awesome text-file. The file that makes dreams come true.
+[   End      ]	  =	I regret to announce — this is The End. I am going now. I bid you all a very fond farewell.
