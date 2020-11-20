@@ -202,23 +202,24 @@ class Controller(object):
     def _connect_signals(self):
         """Connect signals and slots."""
         self._view.buttons["Browse"].clicked.connect(self._choose_filepath)
-        #self._view.buttons["Set Default"].clicked.connect()
+        # self._view.buttons["Set Default"].clicked.connect()
         self._view.buttons["Start"].clicked.connect(self._start)
-        #self._view.buttons["Cancel"].clicked.connect()
+        # self._view.buttons["Cancel"].clicked.connect()
         # self._view.buttons["Info"].clicked.connect()
-        #self._view.buttons["Save as .txt"].clicked.connect()
+        # self._view.buttons["Save as .txt"].clicked.connect()
         self._view.buttons["End"].clicked.connect(self._view.close)
         self._view.input_box_word.returnPressed.connect(self._start)
 
 
 if __name__ == "__main__":
-    # Create an instance of `QApplication`
+    # Create an instance of 'QApplication'
     crawler = QApplication(sys.argv)
 
     # Show the calculator's GUI
     view = View()
     view.show()
 
+    # Create the controller incl. Model & GUI
     c = Controller(ModelBasic(), view)
 
     # Execute calculator's main loop
