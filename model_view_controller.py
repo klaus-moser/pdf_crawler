@@ -1,6 +1,6 @@
 # model_view_controller.py
 import sys
-from os.path import dirname, abspath
+from os.path import dirname, abspath, basename
 from pathlib import Path
 
 from PyQt5 import QtGui
@@ -192,7 +192,7 @@ class View(QMainWindow):
 
     def show_file_dialog(self, home_dir):
         """Show file dialog."""
-        filter_ = "Text files (*.txt)"
+        filter_ = "Pfd files (*.pdf)"
         path = QFileDialog.getOpenFileName(self, 'Choose folder', home_dir, filter=filter_)
         return path[0]
 
@@ -235,7 +235,7 @@ class Controller(object):
                 search_path = self._view.show_dir_dialog(home_dir)
             else:
                 search_path = self._view.show_file_dialog(home_dir)
-            self._view.set_path_text(search_path)
+            self._view.set_path_text(basename(search_path))
         except mvc_exc.FileDialogError as err:
             self._view.set_display_text(err)
 
