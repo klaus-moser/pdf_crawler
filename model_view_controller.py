@@ -51,10 +51,8 @@ class View(QMainWindow):
         self.setWindowTitle("PDF-Crawler")
         self.setWindowIcon(QIcon("icon.jpg"))
         self.setFixedSize(self.width, self.height)
-
         # Set the central widget and the general layout
         self._centralWidget = QWidget(self)
-
         # Create the display, input, buttons, checkboxes etc.
         self._create_result_display()
         self._create_buttons()
@@ -141,6 +139,20 @@ class View(QMainWindow):
         self.checkbox_dir.setChecked(True)
         self.checkbox_file.setChecked(False)
 
+    def btn_state(self, check_box):
+        """Check the state of the checkboxes."""
+        if check_box.text() == "Directory":
+            if check_box.isChecked():
+                self.checkbox_file.setChecked(False)
+            else:
+                self.checkbox_file.setChecked(True)
+
+        elif check_box.text() == "File":
+            if check_box.isChecked():
+                self.checkbox_dir.setChecked(False)
+            else:
+                self.checkbox_dir.setChecked(True)
+
     def set_display_text(self, text):
         """Set display's text."""
         for line in text:
@@ -209,7 +221,9 @@ class Controller(object):
         # self._view.buttons["Save as .txt"].clicked.connect()
         self._view.buttons["End"].clicked.connect(self._view.close)
         self._view.input_box_word.returnPressed.connect(self._start)
-
+        # Checkboxes: The source object of signal is passed to the function using lambda
+        self._view.checkbox_dir.stateChanged.connect(lambda: self._view.btn_state(self._view.checkbox_dir))
+        self._view.checkbox_file.toggled.connect(lambda: self._view.btn_state(self._view.checkbox_file))
 
 if __name__ == "__main__":
     # Create an instance of 'QApplication'
