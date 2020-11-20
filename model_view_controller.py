@@ -22,7 +22,7 @@ __author__ = "Klaus Moser"
 class ModelBasic:
 
     def get_info_text(self):
-        pass
+        return basic_backend.get_info_text()
 
     def set_default_path(self, path):
         basic_backend.set_default_path(path=path)
@@ -74,6 +74,8 @@ class View(QMainWindow):
         """Create & init the pop-up windows."""
         self.info_pop_up = QMessageBox(self._centralWidget)
         self.info_pop_up.setWindowTitle("Information")
+        self.info_pop_up.setIcon(QMessageBox.Information)
+        self.info_pop_up.setStandardButtons(QMessageBox.Close)
 
     def _set_labels(self):
         """Set all labels"""
@@ -188,10 +190,10 @@ class View(QMainWindow):
         """Show file dialog."""
         return QFileDialog.getExistingDirectory(self, 'Choose folder', home_dir)
 
-    def show_information(self, text):
+    def show_information(self, text=None):
         """Pop-Up window to show usage and general information."""
         self.info_pop_up.setText(text)
-        self.info_pop_up.show()
+        self.info_pop_up.exec_()
 
 
 class Controller(object):
