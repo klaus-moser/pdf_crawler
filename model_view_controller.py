@@ -186,11 +186,17 @@ class View(QMainWindow):
         """Clear the display."""
         self.setDisplayText("")
 
-    def show_file_dialog(self, home_dir):
-        """Show file dialog."""
+    def show_dir_dialog(self, home_dir):
+        """Show dir dialog."""
         return QFileDialog.getExistingDirectory(self, 'Choose folder', home_dir)
 
-    def show_information(self, text=None):
+    def show_file_dialog(self, home_dir):
+        """Show file dialog."""
+        filter_ = "Text files (*.txt)"
+        path = QFileDialog.getOpenFileName(self, 'Choose folder', home_dir, filter=filter_)
+        return path[0]
+
+    def show_information(self, text):
         """Pop-Up window to show usage and general information."""
         self.info_pop_up.setText(text)
         self.info_pop_up.exec_()
@@ -221,11 +227,14 @@ class Controller(object):
         except mvc_exc.NoResults as err:
             self._view.set_display_text(err)
 
-    def _choose_filepath(self):
+    def _browse(self):
         """Select the search path."""
         home_dir = self.model.get_home_dir()
         try:
-            search_path = self._view.show_file_dialog(home_dir)
+            if self._view.checkbox_dir.isChecked():
+                search_path = self._view.show_dir_dialog(home_dir)
+            else:
+                search_path = self._view.show_file_dialog(home_dir)
             self._view.set_path_text(search_path)
         except mvc_exc.FileDialogError as err:
             self._view.set_display_text(err)
@@ -240,7 +249,7 @@ class Controller(object):
 
     def _connect_signals(self):
         """Connect signals and slots."""
-        self._view.buttons["Browse"].clicked.connect(self._choose_filepath)
+        self._view.buttons["Browse"].clicked.connect(self._browse)
         # self._view.buttons["Set Default"].clicked.connect()
         self._view.buttons["Start"].clicked.connect(self._start)
         # self._view.buttons["Cancel"].clicked.connect()
