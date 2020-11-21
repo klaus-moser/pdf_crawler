@@ -21,25 +21,32 @@ __author__ = "Klaus Moser"
 
 class ModelBasic:
     def __init__(self):
+        """Get default path in start up."""
         self.search_path = basic_backend.get_default_path()
 
     def get_info_text(self):
+        """Returnes the info text."""
         return basic_backend.get_info_text()
 
     def set_default_path(self, path):
+        """Set current path as default path."""
         basic_backend.set_default_path(path=path)
 
     def crawl(self, path, word):
+        """Crawl the current path (file or files) for the word."""
         basic_backend.walk_folder(folder_path=path)
         basic_backend.walk_pdf_files(word=word)
 
     def get_results(self):
+        """Return the results."""
         return basic_backend.items.copy()
 
     def delete_log(self):
+        """Delete .log file if empty."""
         basic_backend.delete_log()
 
     def get_home_dir(self):
+        """Return the home directory of the system."""
         return basic_backend.get_home_dir()
 
 
@@ -183,7 +190,7 @@ class View(QMainWindow):
 
     def clear_display(self):
         """Clear the display."""
-        self.setDisplayText("")
+        self.display.setPlainText("")
 
     def show_dir_dialog(self, home_dir):
         """Show dir dialog."""
@@ -204,6 +211,7 @@ class View(QMainWindow):
 class Controller(object):
 
     def __init__(self, model, view_):
+        """Init the model, view, get default path & connect siganls."""
         self.model = model
         self._view = view_
         self._get_default_path()
@@ -211,10 +219,12 @@ class Controller(object):
         self._connect_signals()
 
     def _set_default_path(self):
+        """Set the current path as default."""
         if self.model.search_path:
             self.model.set_default_path(self.model.search_path)
 
     def _get_default_path(self):
+        """If a default path was set get it."""
         self._view.set_path_text(basename(self.model.search_path))
 
     def _start(self):
@@ -250,11 +260,16 @@ class Controller(object):
         except FileNotFoundError as err:
             self._view.set_display_text(err)
 
+    def _clear_display(self):
+        """Clear the result display."""
+        self._view.clear_display()
+
     def _connect_signals(self):
         """Connect signals and slots."""
         self._view.buttons["Browse"].clicked.connect(self._browse)
         self._view.buttons["Set Default"].clicked.connect(self._set_default_path)
         self._view.buttons["Start"].clicked.connect(self._start)
+        self._view.buttons["Clear"].clicked.connect(self._clear_display)
         # self._view.buttons["Cancel"].clicked.connect()
         self._view.buttons["Info"].clicked.connect(self._show_info)
         # self._view.buttons["Save as .txt"].clicked.connect()
