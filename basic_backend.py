@@ -1,14 +1,12 @@
 # basic_backend.py
-from pathlib import Path
-
 import mvc_exceptions as mvc_exc
+from pathlib import Path
 from re import findall
-from os import remove, walk, mkdir
+from os import remove, walk
 from os.path import basename, join, exists
 from PyPDF2 import PdfFileReader
 
 # global variable(s) where we keep the data
-items = list()
 pdfs = list()
 
 
@@ -29,8 +27,9 @@ def get_home_dir():
 
 def set_default_path(path):
     """Set default path for application."""
+    dir_ = "./default.txt"
     try:
-        with open("./default.txt", 'w', encoding='utf-8') as f:
+        with open(dir_, 'w', encoding='utf-8') as f:
             f.write(path)
     except IOError as err:
         raise err
@@ -38,19 +37,22 @@ def set_default_path(path):
 
 def get_default_path():
     """Get default path."""
-    try:
-        with open("./default.txt", 'r', encoding='utf-8') as f:
-            path = f.read()
-        return path
-    except FileNotFoundError as err:
-        raise err
+    dir_ = "./default.txt"
+    path_ = ""
+    if exists(dir_):
+        try:
+            with open(dir_, 'r', encoding='utf-8') as f:
+                path_ = f.read()
+            return path_
+        except FileNotFoundError as err:
+            raise err
+    else:
+        return path_
 
 
 def walk_folder(folder_path):
     """Find and save all .pdf, .Pdf, .PDF files in given path."""
     global pdfs
-    global items
-    items.clear()
     pdfs.clear()
     pdf_files = []
 
@@ -61,14 +63,13 @@ def walk_folder(folder_path):
 
     if pdf_files:
         pdfs.extend(pdf_files)
+        return pdf_files
     else:
         raise mvc_exc.NoPdfFilesFound('No .pdf, .Pdf or .PDF file(s) found!')
 
 
 def crawl_pdf_file(file, word):
     """Search single file with the given word. Return list of Results or None."""
-    global items
-
     matches = []
 
     # creating a pdf file object
@@ -91,22 +92,6 @@ def crawl_pdf_file(file, word):
             if words:
                 matches.append((basename(file), page + 1, len(words)))
     return matches
-
-
-def walk_pdf_files(word):
-    """Walk through given Files and use crawl_pdf_files to extract information."""
-    global items
-    global pdfs
-
-    results = list()
-
-    for file in pdfs:
-        results.extend(crawl_pdf_file(file=file, word=word))
-
-    if results:
-        items.extend(results)
-    else:
-        raise mvc_exc.NoResults('No Results!')
 
 
 def delete_log():

@@ -1,12 +1,8 @@
 # model_view_controller.py
 import sys
-from os.path import dirname, abspath, basename
-from pathlib import Path
-
-from PyQt5 import QtGui
-
 import basic_backend
 import mvc_exceptions as mvc_exc
+from os.path import basename, isfile
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QApplication, QPlainTextEdit, QLabel, QTextEdit, QFileDialog, QCheckBox, QMessageBox
 from PyQt5.QtWidgets import QLineEdit
@@ -32,10 +28,9 @@ class ModelBasic:
         """Set current path as default path."""
         basic_backend.set_default_path(path=path)
 
-    def crawl(self, path, word):
-        """Crawl the current path (file or files) for the word."""
+    def get_all_pdfs_in_folder(self, path):
+        """Walk current path for all .pdfs."""
         basic_backend.walk_folder(folder_path=path)
-        basic_backend.walk_pdf_files(word=word)
 
     def get_results(self):
         """Return the results."""
@@ -48,6 +43,14 @@ class ModelBasic:
     def get_home_dir(self):
         """Return the home directory of the system."""
         return basic_backend.get_home_dir()
+
+    def crawl_file(self, pdf, word):
+        """Crawl a pdf file."""
+        return basic_backend.crawl_pdf_file(pdf, word)
+
+    def walk_folder(self, path):
+        """Walk folder and return all the .pdfs"""
+        return basic_backend.walk_folder(path)
 
 
 class View(QMainWindow):
@@ -78,10 +81,16 @@ class View(QMainWindow):
 
     def _create_pop_ups(self):
         """Create & init the pop-up windows."""
+        # Info Pop-Up
         self.info_pop_up = QMessageBox(self._centralWidget)
         self.info_pop_up.setWindowTitle("Information")
         self.info_pop_up.setIcon(QMessageBox.Information)
         self.info_pop_up.setStandardButtons(QMessageBox.Close)
+        # Warning Pop-Up
+        self.warning_pop_up = QMessageBox(self._centralWidget)
+        self.warning_pop_up.setWindowTitle("Notion!")
+        self.warning_pop_up.setIcon(QMessageBox.Warning)
+        self.warning_pop_up.setStandardButtons(QMessageBox.Close)
 
     def _set_labels(self):
         """Set all labels"""
@@ -113,9 +122,9 @@ class View(QMainWindow):
 
     def _create_input_box(self):
         """Create Input Box for the word"""
-        # Create the display widget
+        # Create input box for search word.
         self.input_box_word = QLineEdit(self._centralWidget)
-        # Set some display's properties
+        # Set some properties
         self.input_box_word.setGeometry(55, 240, 380, 31)
 
     def _create_result_display(self):
@@ -207,6 +216,15 @@ class View(QMainWindow):
         self.info_pop_up.setText(text)
         self.info_pop_up.exec_()
 
+    def show_warning(self, state):
+        """Pop-Up to warn user to choose path or word."""
+        self.warning_pop_up.setText(state)
+        self.warning_pop_up.exec_()
+
+    def get_word_text(self):
+        """Returns the word."""
+        return self.input_box_word.text()
+
 
 class Controller(object):
 
@@ -227,16 +245,34 @@ class Controller(object):
         """If a default path was set get it."""
         self._view.set_path_text(basename(self.model.search_path))
 
-    def _start(self):
+    def _crawl(self):
         """Start Crawling."""
-        try:
-            path = dirname(abspath(__file__)) + r"\TEST_FILES"
-            word = "Data"
-            self.model.crawl(path, word)
-            res = self.model.get_results()
-            self._view.set_display_text(res)
-        except mvc_exc.NoResults as err:
-            self._view.set_display_text(err)
+        path = self.model.search_path
+        word = self._view.get_word_text()
+
+        if not path:
+            warning = "No path chosen!"
+            self._view.show_warning(warning)
+        elif not word:
+            warning = "No word chosen!"
+            self._view.show_warning(warning)
+        else:
+            try:
+                if isfile(path):
+                    # Single .pdf
+                    ret = self.model.crawl_file(path, word)
+                    self._view.set_display_text(ret)
+                else:
+                    # Folder with several .pdfs
+                    pdf_files = self.model.walk_folder(path)
+
+                    if pdf_files:
+                        for pdf in pdf_files:
+                            ret = self.model.crawl_file(pdf, word)
+                            self._view.set_display_text(ret)
+
+            except mvc_exc.NoResults as err:
+                self._view.set_display_text(err)
 
     def _browse(self):
         """Select the search path."""
@@ -268,13 +304,13 @@ class Controller(object):
         """Connect signals and slots."""
         self._view.buttons["Browse"].clicked.connect(self._browse)
         self._view.buttons["Set Default"].clicked.connect(self._set_default_path)
-        self._view.buttons["Start"].clicked.connect(self._start)
+        self._view.buttons["Start"].clicked.connect(self._crawl)
         self._view.buttons["Clear"].clicked.connect(self._clear_display)
         # self._view.buttons["Cancel"].clicked.connect()
         self._view.buttons["Info"].clicked.connect(self._show_info)
         # self._view.buttons["Save as .txt"].clicked.connect()
         self._view.buttons["End"].clicked.connect(self._view.close)
-        self._view.input_box_word.returnPressed.connect(self._start)
+        self._view.input_box_word.returnPressed.connect(self._crawl)
         # Checkboxes: The source object of signal is passed to the function using lambda
         self._view.checkbox_dir.stateChanged.connect(lambda: self._view.btn_state(self._view.checkbox_dir))
         self._view.checkbox_file.toggled.connect(lambda: self._view.btn_state(self._view.checkbox_file))
