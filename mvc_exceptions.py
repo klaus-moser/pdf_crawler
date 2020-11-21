@@ -11,11 +11,15 @@ class NoResults(Exception):
     pass
 
 
-class MoPdfFilesFound(Exception):
+class NoPdfFilesFound(Exception):
     pass
 
 
 class NoDefaultPathSet(Exception):
+    pass
+
+
+class FileDialogError(Exception):
     pass
 
 
