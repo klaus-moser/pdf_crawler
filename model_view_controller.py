@@ -20,15 +20,14 @@ __author__ = "Klaus Moser"
 
 
 class ModelBasic:
+    def __init__(self):
+        self.search_path = basic_backend.get_default_path()
 
     def get_info_text(self):
         return basic_backend.get_info_text()
 
     def set_default_path(self, path):
         basic_backend.set_default_path(path=path)
-
-    def get_default_path(self):
-        return basic_backend.get_default_path()
 
     def crawl(self, path, word):
         basic_backend.walk_folder(folder_path=path)
@@ -207,14 +206,16 @@ class Controller(object):
     def __init__(self, model, view_):
         self.model = model
         self._view = view_
+        self._get_default_path()
         # Connect signals and slots
         self._connect_signals()
 
     def _set_default_path(self):
-        pass
+        if self.model.search_path:
+            self.model.set_default_path(self.model.search_path)
 
     def _get_default_path(self):
-        pass
+        self._view.set_path_text(basename(self.model.search_path))
 
     def _start(self):
         """Start Crawling."""
@@ -232,10 +233,12 @@ class Controller(object):
         home_dir = self.model.get_home_dir()
         try:
             if self._view.checkbox_dir.isChecked():
-                search_path = self._view.show_dir_dialog(home_dir)
+                re = self._view.show_dir_dialog(home_dir)
             else:
-                search_path = self._view.show_file_dialog(home_dir)
-            self._view.set_path_text(basename(search_path))
+                re = self._view.show_file_dialog(home_dir)
+            if re:
+                self.model.search_path = re
+            self._view.set_path_text(basename(self.model.search_path))
         except mvc_exc.FileDialogError as err:
             self._view.set_display_text(err)
 
@@ -250,7 +253,7 @@ class Controller(object):
     def _connect_signals(self):
         """Connect signals and slots."""
         self._view.buttons["Browse"].clicked.connect(self._browse)
-        # self._view.buttons["Set Default"].clicked.connect()
+        self._view.buttons["Set Default"].clicked.connect(self._set_default_path)
         self._view.buttons["Start"].clicked.connect(self._start)
         # self._view.buttons["Cancel"].clicked.connect()
         self._view.buttons["Info"].clicked.connect(self._show_info)

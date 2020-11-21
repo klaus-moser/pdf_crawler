@@ -11,7 +11,7 @@ class NoResults(Exception):
     pass
 
 
-class MoPdfFilesFound(Exception):
+class NoPdfFilesFound(Exception):
     pass
 
 

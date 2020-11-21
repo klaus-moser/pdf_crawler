@@ -3,14 +3,13 @@ from pathlib import Path
 
 import mvc_exceptions as mvc_exc
 from re import findall
-from os import remove, walk
+from os import remove, walk, mkdir
 from os.path import basename, join, exists
 from PyPDF2 import PdfFileReader
 
 # global variable(s) where we keep the data
 items = list()
 pdfs = list()
-default = str()
 
 
 def get_info_text():
@@ -30,19 +29,21 @@ def get_home_dir():
 
 def set_default_path(path):
     """Set default path for application."""
-    global default
-    default = ""
-    default = path
+    try:
+        with open("./default.txt", 'w', encoding='utf-8') as f:
+            f.write(path)
+    except IOError as err:
+        raise err
 
 
 def get_default_path():
-    """Set default path for application."""
-    global default
-
-    if default:
-        return default
-    else:
-        raise mvc_exc.NoDefaultPathSet("No default path was set.")
+    """Get default path."""
+    try:
+        with open("./default.txt", 'r', encoding='utf-8') as f:
+            path = f.read()
+        return path
+    except FileNotFoundError as err:
+        raise err
 
 
 def walk_folder(folder_path):
@@ -61,7 +62,7 @@ def walk_folder(folder_path):
     if pdf_files:
         pdfs.extend(pdf_files)
     else:
-        raise mvc_exc.MoPdfFilesFound('No .pdf, .Pdf or .PDF file(s) found!')
+        raise mvc_exc.NoPdfFilesFound('No .pdf, .Pdf or .PDF file(s) found!')
 
 
 def crawl_pdf_file(file, word):
