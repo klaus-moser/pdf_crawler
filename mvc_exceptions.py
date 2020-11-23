@@ -1,4 +1,3 @@
-# mvc_exceptions.py
 class ItemAlreadyStored(Exception):
     pass
 

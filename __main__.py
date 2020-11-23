@@ -1,7 +1,7 @@
-# __main__.py
-
 import sys
-from model_view_controller import *
+from model import *
+from view import *
+from controller import *
 
 __version__ = "0.1"
 __author__ = "Klaus Moser"
