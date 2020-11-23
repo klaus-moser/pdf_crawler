@@ -19,10 +19,6 @@ class Model:
         """Walk current path for all .pdfs."""
         basic_backend.walk_folder(folder_path=path)
 
-    def delete_log(self):
-        """Delete .log file if empty."""
-        basic_backend.delete_log()
-
     def get_home_dir(self):
         """Return the home directory of the system."""
         return basic_backend.get_home_dir()
@@ -34,6 +30,10 @@ class Model:
     def walk_folder(self, path):
         """Walk folder and return all the .pdfs"""
         return basic_backend.walk_folder(path)
+
+    def delete_log(self):
+        """Delete .log file if empty."""
+        basic_backend.delete_log()
 
 
 if __name__ == '__main__':
