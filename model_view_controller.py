@@ -1,21 +1,14 @@
 # model_view_controller.py
-import sys
+
 import basic_backend
 import mvc_exceptions as mvc_exc
 from os.path import basename, isfile
 from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QApplication, QPlainTextEdit, QLabel, QTextEdit, QFileDialog, QCheckBox, QMessageBox
-from PyQt5.QtWidgets import QLineEdit
-from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtWidgets import QPushButton
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import *
 
 
-__version__ = "0.1"
-__author__ = "Klaus Moser"
-
-
-class ModelBasic:
+class Model:
+    """The model that fetches all necessary data from the backend."""
     def __init__(self):
         """Get default path in start up."""
         self.search_path = basic_backend.get_default_path()
@@ -317,15 +310,4 @@ class Controller(object):
 
 
 if __name__ == "__main__":
-    # Create an instance of 'QApplication'
-    crawler = QApplication(sys.argv)
-
-    # Show the calculator's GUI
-    view = View()
-    view.show()
-
-    # Create the controller incl. Model & GUI
-    c = Controller(ModelBasic(), view)
-
-    # Execute calculator's main loop
-    sys.exit(crawler.exec_())
+    print(__file__)
