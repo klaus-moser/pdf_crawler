@@ -67,7 +67,7 @@ def walk_folder(folder_path):
         raise mvc_exc.NoPdfFilesFound('No .pdf, .Pdf or .PDF file(s) found!')
 
 
-def crawl_pdf_file(file, word):
+def crawl_file(file, word):
     """Search single file with the given word. Return list of Results or None."""
     matches = []
 
@@ -91,6 +91,26 @@ def crawl_pdf_file(file, word):
             if words:
                 matches.append((basename(file), page + 1, len(words)))
     return matches
+
+
+def crawl_files(path, word):
+    """Crawl directory full of pdf files."""
+    matches = []
+
+    list_of_pdf = walk_folder(path)
+    for pdf in list_of_pdf:
+        matches.append(crawl_file(pdf, word))
+    return matches
+
+
+def save_results(path, results):
+    """Save results to .txt file."""
+    if results:
+        pass
+        # Write file
+
+    else:
+        raise mvc_exc.NoResults("No results to save!")
 
 
 def delete_log():

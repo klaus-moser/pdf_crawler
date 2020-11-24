@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 
 
 class View(QMainWindow):
-    """PDFCrawler's View (GUI)."""
+    """View (GUI)."""
 
     def __init__(self):
         """View initializer."""
@@ -119,6 +119,7 @@ class View(QMainWindow):
 
     def btn_state(self, check_box):
         """Check the state of the checkboxes."""
+        self.set_path_text("")
         if check_box.text() == "Directory":
             if check_box.isChecked():
                 self.checkbox_file.setChecked(False)
@@ -159,6 +160,10 @@ class View(QMainWindow):
         filter_ = "Pfd files (*.pdf)"
         path = QFileDialog.getOpenFileName(self, 'Choose folder', home_dir, filter=filter_)
         return path[0]
+
+    def get_path_to_save(self):
+        pass
+        #return QFileDialog.getSaveFileName(self, 'Save Results, home_dir, filter="*.txt")
 
     def show_information(self, text):
         """Pop-Up window to show usage and general information."""

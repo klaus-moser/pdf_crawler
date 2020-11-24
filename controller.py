@@ -3,9 +3,10 @@ from os.path import basename, isfile
 
 
 class Controller(object):
+    """Controller to control the model, view & backend."""
 
     def __init__(self, model, view_):
-        """Init the model, view, get default path & connect siganls."""
+        """Init the model, view, get default path & connect signals."""
         self.model = model
         self._view = view_
         self._get_default_path()
@@ -39,16 +40,12 @@ class Controller(object):
                     ret = self.model.crawl_file(path, word)
                     self._view.set_display_text(ret)
                 else:
-                    # Folder with several .pdfs
-                    pdf_files = self.model.walk_folder(path)
+                    # Several .pdfs
+                    ret = self.model.crawl_files(path, word)
+                    self._view.set_display_text(ret)
 
-                    if pdf_files:
-                        for pdf in pdf_files:
-                            ret = self.model.crawl_file(pdf, word)
-                            self._view.set_display_text(ret)
-
-            except mvc_exc.NoResults as err:
-                self._view.set_display_text(err)
+            except mvc_exc.ErrorCrawlingFile:
+                raise mvc_exc.ErrorCrawlingFile(self._view.set_display_text("Error crawling file"))
 
     def _browse(self):
         """Select the search path."""
@@ -76,6 +73,22 @@ class Controller(object):
         """Clear the result display."""
         self._view.clear_display()
 
+    def _toggle_checkbox(self):
+        """Connect to View when checkbox is toggled & clear current path."""
+        self._view.btn_state(self._view.checkbox_file)
+        self.model.search_path = ""
+
+    def _state_changed_checkbox(self):
+        """Connect to View when checkbox-state is changed & clear current path."""
+        self._view.btn_state(self._view.checkbox_dir)
+        self.model.search_path = ""
+
+    def _save_results(self):
+        """Save results to .txt file."""
+        pass
+        #path = self._view.get_path_to_save()
+        #self.model.save_results(path, self._view.display_text())
+
     def _connect_signals(self):
         """Connect signals and slots."""
         self._view.buttons["Browse"].clicked.connect(self._browse)
@@ -84,12 +97,12 @@ class Controller(object):
         self._view.buttons["Clear"].clicked.connect(self._clear_display)
         # self._view.buttons["Cancel"].clicked.connect()
         self._view.buttons["Info"].clicked.connect(self._show_info)
-        # self._view.buttons["Save as .txt"].clicked.connect()
+        self._view.buttons["Save as .txt"].clicked.connect(self._save_results)
         self._view.buttons["End"].clicked.connect(self._view.close)
         self._view.input_box_word.returnPressed.connect(self._crawl)
         # Checkboxes: The source object of signal is passed to the function using lambda
-        self._view.checkbox_dir.stateChanged.connect(lambda: self._view.btn_state(self._view.checkbox_dir))
-        self._view.checkbox_file.toggled.connect(lambda: self._view.btn_state(self._view.checkbox_file))
+        self._view.checkbox_dir.stateChanged.connect(self._state_changed_checkbox)
+        self._view.checkbox_file.toggled.connect(self._toggle_checkbox)
 
 
 if __name__ == '__main__':
