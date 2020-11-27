@@ -85,9 +85,9 @@ class Controller(object):
 
     def _save_results(self):
         """Save results to .txt file."""
-        pass
-        #path = self._view.get_path_to_save()
-        #self.model.save_results(path, self._view.display_text())
+        text = self._view.display_text()
+        path = self._view.get_path_to_save(self.model.get_home_dir())
+        self.model.save_results(path, text)
 
     def _connect_signals(self):
         """Connect signals and slots."""

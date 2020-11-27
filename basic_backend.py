@@ -26,7 +26,7 @@ def get_home_dir():
 
 def set_default_path(path):
     """Set default path for application."""
-    dir_ = "./default.txt"
+    dir_ = "./default.log"
     try:
         with open(dir_, 'w', encoding='utf-8') as f:
             f.write(path)
@@ -36,7 +36,7 @@ def set_default_path(path):
 
 def get_default_path():
     """Get default path."""
-    dir_ = "./default.txt"
+    dir_ = "./default.log"
     path_ = ""
     if exists(dir_):
         try:
@@ -99,16 +99,15 @@ def crawl_files(path, word):
 
     list_of_pdf = walk_folder(path)
     for pdf in list_of_pdf:
-        matches.append(crawl_file(pdf, word))
+        matches.extend(crawl_file(pdf, word))
     return matches
 
 
 def save_results(path, results):
     """Save results to .txt file."""
-    if results:
-        pass
-        # Write file
-
+    if path and exists(path) and results:
+        with open(file=path, mode="w", encoding='utf-8') as f:
+            f.write(results)
     else:
         raise mvc_exc.NoResults("No results to save!")
 

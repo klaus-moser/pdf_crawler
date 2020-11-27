@@ -161,9 +161,10 @@ class View(QMainWindow):
         path = QFileDialog.getOpenFileName(self, 'Choose folder', home_dir, filter=filter_)
         return path[0]
 
-    def get_path_to_save(self):
-        pass
-        #return QFileDialog.getSaveFileName(self, 'Save Results, home_dir, filter="*.txt")
+    def get_path_to_save(self, home_dir):
+        """Dialog to choose a path to save the results."""
+        return QFileDialog.getSaveFileName(self, "Save Results", home_dir, filter="*.txt")
+
 
     def show_information(self, text):
         """Pop-Up window to show usage and general information."""
