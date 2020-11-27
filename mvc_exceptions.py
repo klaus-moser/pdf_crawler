@@ -1,4 +1,6 @@
-# mvc_exceptions.py
+"""File that holds all self-made exceptions."""
+
+
 class ItemAlreadyStored(Exception):
     pass
 
@@ -20,6 +22,10 @@ class NoDefaultPathSet(Exception):
 
 
 class FileDialogError(Exception):
+    pass
+
+
+class ErrorCrawlingFile(Exception):
     pass
 
 
