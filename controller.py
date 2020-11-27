@@ -46,6 +46,8 @@ class Controller(object):
 
             except mvc_exc.ErrorCrawlingFile:
                 raise mvc_exc.ErrorCrawlingFile(self._view.set_display_text("Error crawling file"))
+            finally:
+                pass
 
     def _browse(self):
         """Select the search path."""

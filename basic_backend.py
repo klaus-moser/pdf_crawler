@@ -5,8 +5,10 @@ from os import remove, walk
 from os.path import basename, join, exists
 from PyPDF2 import PdfFileReader
 
+
 # global variable(s) where we keep the data
 pdfs = list()
+
 
 
 def get_info_text():
