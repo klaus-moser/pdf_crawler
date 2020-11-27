@@ -105,8 +105,8 @@ def crawl_files(path, word):
 
 def save_results(path, results):
     """Save results to .txt file."""
-    if path and exists(path) and results:
-        with open(file=path, mode="w", encoding='utf-8') as f:
+    if path[0] and results:
+        with open(file=path[0], mode="w", encoding='utf-8') as f:
             f.write(results)
     else:
         raise mvc_exc.NoResults("No results to save!")
