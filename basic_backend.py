@@ -10,7 +10,6 @@ from PyPDF2 import PdfFileReader
 pdfs = list()
 
 
-
 def get_info_text():
     """Opens the info.txt and returns its content."""
     dir_ = "./info.txt"
