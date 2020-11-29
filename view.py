@@ -31,6 +31,7 @@ class View(QMainWindow):
         self._create_progress_bar()
 
     def _create_progress_bar(self):
+        """Create  & init the progressbar."""
         self.progressbar = QProgressBar(self._centralWidget)
         self.progressbar.setMaximum(100)
         self.progressbar.setGeometry(105, 561, 300, 30)
