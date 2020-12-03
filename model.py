@@ -1,4 +1,4 @@
-import basic_backend
+from basic_backend import *
 
 
 class Model:
@@ -6,35 +6,36 @@ class Model:
 
     def __init__(self):
         """Get default path in start up."""
-        self.search_path = basic_backend.get_default_path()
+        self.bk = BackendClass()
+        self.search_path = self.bk.get_default_path()
 
     def get_info_text(self):
         """Returnes the info text."""
-        return basic_backend.get_info_text()
+        return self.bk.get_info_text()
 
     def set_default_path(self, path):
         """Set current path as default path."""
-        basic_backend.set_default_path(path=path)
+        self.bk.set_default_path(path=path)
 
     def get_home_dir(self):
         """Return the home directory of the system."""
-        return basic_backend.get_home_dir()
+        return self.bk.get_home_dir()
 
     def crawl_file(self, pdf, word):
         """Crawl a single pdf file."""
-        return basic_backend.crawl_file(pdf, word)
+        return self.bk.crawl_file(pdf, word)
 
     def crawl_files(self, path, word):
         """Crawl a directory full of pdf files."""
-        return basic_backend.crawl_files(path, word)
+        return self.bk.crawl_files(path, word)
 
     def save_results(self, path, results):
         """Save results to .txt file."""
-        basic_backend.save_results(path, results)
+        self.bk.save_results(path, results)
 
     def delete_log(self):
         """Delete .log file if empty."""
-        basic_backend.delete_log()
+        self.bk.delete_log()
 
 
 if __name__ == '__main__':

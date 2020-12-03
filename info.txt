@@ -1,20 +1,18 @@
-Behold:
-
 __name__    = "pdf_crawler"
 __version__ = "0.1"
 __author__  = "Kapt.Don Kanaille"
 __date__    = 20-11-2020
 
 
+Directory  [X] = Choose a directory.
+File       [X] = Choose a single file.
 
-Directory  [X]	= Choose a directory.
-File	   [X]	= Choose a single file.
 
-[   Info     ]	= Thats what youre reading.
-[   Browse   ]	= Choose a {Directory, File}.
-[Set Default ]	= Set {Dir, File} as default.
-[   Start    ]	= Crawl.
-[   Clear    ]	= Remove those results.
-[   Cancel   ]	= Stop that filthy crawling.
-[Save as .txt]	= Save to text-file.
-[   End      ]	= This is The End.
+[   Info     ] = Thats what youre reading.
+[   Browse   ] = Choose a {Directory, File}.
+[Set Default ] = Set {Dir, File} as default.
+[   Start    ] = Crawl.
+[   Clear    ] = Remove those results.
+[   Cancel   ] = Stop that filthy crawling.
+[Save as .txt] = Save to text-file.
+[   End      ] = This is The End.

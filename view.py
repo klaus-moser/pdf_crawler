@@ -27,6 +27,14 @@ class View(QMainWindow):
         self._create_pop_ups()
         # Add to screen/central widget
         self.setCentralWidget(self._centralWidget)
+        # Progressbar
+        self._create_progress_bar()
+
+    def _create_progress_bar(self):
+        """Create  & init the progressbar."""
+        self.progressbar = QProgressBar(self._centralWidget)
+        self.progressbar.setMaximum(100)
+        self.progressbar.setGeometry(105, 561, 300, 30)
 
     def _create_pop_ups(self):
         """Create & init the pop-up windows."""
@@ -161,9 +169,9 @@ class View(QMainWindow):
         path = QFileDialog.getOpenFileName(self, 'Choose folder', home_dir, filter=filter_)
         return path[0]
 
-    def get_path_to_save(self):
-        pass
-        #return QFileDialog.getSaveFileName(self, 'Save Results, home_dir, filter="*.txt")
+    def get_path_to_save(self, home_dir):
+        """Dialog to choose a path to save the results."""
+        return QFileDialog.getSaveFileName(self, "Save Results", home_dir, filter="*.txt")
 
     def show_information(self, text):
         """Pop-Up window to show usage and general information."""
