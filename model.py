@@ -9,9 +9,6 @@ class Model:
         self.bk = BackendClass()
         self.search_path = self.bk.get_default_path()
 
-    def get_bar_number(self):
-        return self.bk.progressbar_value
-
     def get_info_text(self):
         """Returnes the info text."""
         return self.bk.get_info_text()
