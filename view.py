@@ -1,6 +1,8 @@
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import *
 
+from basic_backend import BackendClass
+
 
 class View(QMainWindow):
     """View (GUI)."""
@@ -30,11 +32,26 @@ class View(QMainWindow):
         # Progressbar
         self._create_progress_bar()
 
+    def set_progress_bar_max_val(self, subject: BackendClass):
+        """Set maximum value of progress bar."""
+        value = subject.progressbar_max_value
+        if value > 0:
+            self.progressbar.setMaximum(value)
+            self.progressbar.show()
+
+    def update_progress_bar_value(self, subject: BackendClass):
+        """Update the progress bar value."""
+        self.progressbar.setValue(subject.progressbar_act_value)
+
     def _create_progress_bar(self):
         """Create  & init the progressbar."""
         self.progressbar = QProgressBar(self._centralWidget)
-        self.progressbar.setMaximum(100)
         self.progressbar.setGeometry(105, 561, 300, 30)
+        self.progressbar.hide()
+
+    def hide_progressbar(self):
+        """Hide Progress bar."""
+        self.progressbar.hide()
 
     def _create_pop_ups(self):
         """Create & init the pop-up windows."""

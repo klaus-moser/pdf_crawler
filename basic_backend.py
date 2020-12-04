@@ -5,45 +5,21 @@ from re import findall
 from os import remove, walk
 from os.path import basename, join, exists
 from PyPDF2 import PdfFileReader
-from typing import List
-
-# global variable(s) where we keep the data
-# Normally a data base (e.g. SQLite)
-pdfs = list()
-
-
-class Observer:
-    """
-    Concrete Observers react to the updates issued by the Subject they had been
-    attached to.
-    """
-
-    def update(self, subject: BackendClass) -> None:
-        # if subject._state < 3:
-        print(subject.progressbar_act_value)
 
 
 class BackendClass:
-    def __init__(self):
+    def __init__(self, observer):
         self.progressbar_max_value = 0
         self.progressbar_act_value = 0
-    _observers: List[Observer] = []
+        self.observer = observer
 
-    def attach(self, observer: Observer) -> None:
-        print("Subject: Attached an observer.")
-        self._observers.append(observer)
+    def notify_max_val(self) -> None:
+        """Trigger an update in subscriber."""
+        self.observer.set_progress_bar_max_val(self)
 
-    def detach(self, observer: Observer) -> None:
-        print("Subject: Detached an observer.")
-        self._observers.remove(observer)
-
-    def notify(self) -> None:
-        """
-        Trigger an update in each subscriber.
-        """
-        print("Subject: Notifying observers...")
-        for observer in self._observers:
-            observer.update(self)
+    def notify_update(self) -> None:
+        """Trigger an update in subscriber."""
+        self.observer.update_progress_bar_value(self)
 
     def get_info_text(self):
         """Opens the info.txt and returns its content."""
@@ -83,8 +59,6 @@ class BackendClass:
 
     def walk_folder(self, folder_path):
         """Find and save all .pdf, .Pdf, .PDF files in given path."""
-        global pdfs
-        pdfs.clear()
         pdf_files = []
 
         for root, dirs, files in walk(folder_path):
@@ -94,7 +68,7 @@ class BackendClass:
 
         if pdf_files:
             self.progressbar_max_value = len(pdf_files)
-            pdfs.extend(pdf_files)
+            self.notify_max_val()
             return pdf_files
         else:
             self.progressbar_max_value = 0
@@ -111,9 +85,7 @@ class BackendClass:
             pdf_reader = PdfFileReader(pdfFileObj)
 
             for page in range(pdf_reader.numPages):
-                # Update the bar
-                self.progressbar_act_value += 1
-                self.notify()
+
                 # creating a page object
                 page_obj = pdf_reader.getPage(page)
 
@@ -131,9 +103,14 @@ class BackendClass:
     def crawl_files(self, path, word):
         """Crawl directory full of pdf files."""
         matches = []
+        self.progressbar_act_value = 0
+        self.notify_update()
 
         list_of_pdf = self.walk_folder(path)
         for pdf in list_of_pdf:
+            # Update the bar
+            self.progressbar_act_value += 1
+            self.notify_update()
             matches.extend(self.crawl_file(pdf, word))
         return matches
 

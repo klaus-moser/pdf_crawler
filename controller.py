@@ -15,6 +15,7 @@ class Controller(object):
 
     def _set_default_path(self):
         """Set the current path as default."""
+        self._view.hide_progressbar()
         if self.model.search_path:
             self.model.set_default_path(self.model.search_path)
 
@@ -51,6 +52,7 @@ class Controller(object):
 
     def _browse(self):
         """Select the search path."""
+        self._view.hide_progressbar()
         home_dir = self.model.get_home_dir()
         try:
             if self._view.checkbox_dir.isChecked():
@@ -65,6 +67,7 @@ class Controller(object):
 
     def _show_info(self):
         """Show the Information Pop-Up."""
+        self._view.hide_progressbar()
         try:
             text = self.model.get_info_text()
             self._view.show_information(text)
@@ -73,20 +76,24 @@ class Controller(object):
 
     def _clear_display(self):
         """Clear the result display."""
+        self._view.hide_progressbar()
         self._view.clear_display()
 
     def _toggle_checkbox(self):
         """Connect to View when checkbox is toggled & clear current path."""
+        self._view.hide_progressbar()
         self._view.btn_state(self._view.checkbox_file)
         self.model.search_path = ""
 
     def _state_changed_checkbox(self):
         """Connect to View when checkbox-state is changed & clear current path."""
+        self._view.hide_progressbar()
         self._view.btn_state(self._view.checkbox_dir)
         self.model.search_path = ""
 
     def _save_results(self):
         """Save results to .txt file."""
+        self._view.hide_progressbar()
         text = self._view.display_text()
         path = self._view.get_path_to_save(self.model.get_home_dir())
         self.model.save_results(path, text)

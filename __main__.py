@@ -14,7 +14,7 @@ view = View()
 view.show()
 
 # Create the controller incl. Model & GUI
-c = Controller(Model(), view)
+c = Controller(Model(view), view)
 
 # Execute calculator's main loop
 sys.exit(crawler.exec_())

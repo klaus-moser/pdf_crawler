@@ -4,11 +4,9 @@ from basic_backend import *
 class Model:
     """The model that fetches all necessary data from the backend."""
 
-    def __init__(self):
+    def __init__(self, view):
         """Get default path in start up."""
-        self.bk = BackendClass()
-        observer_a = Observer()
-        self.bk.attach(observer_a)
+        self.bk = BackendClass(view)
         self.search_path = self.bk.get_default_path()
 
     def get_info_text(self):
