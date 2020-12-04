@@ -1,18 +1,49 @@
-import mvc_exceptions as mvc_exc
+from __future__ import annotations
+from mvc_exceptions import *
 from pathlib import Path
 from re import findall
 from os import remove, walk
 from os.path import basename, join, exists
 from PyPDF2 import PdfFileReader
+from typing import List
 
 # global variable(s) where we keep the data
+# Normally a data base (e.g. SQLite)
 pdfs = list()
+
+
+class Observer:
+    """
+    Concrete Observers react to the updates issued by the Subject they had been
+    attached to.
+    """
+
+    def update(self, subject: BackendClass) -> None:
+        # if subject._state < 3:
+        print(subject.progressbar_act_value)
 
 
 class BackendClass:
     def __init__(self):
-        self.progressbar_max_value = 100
-        self.progressbar_value = 0
+        self.progressbar_max_value = 0
+        self.progressbar_act_value = 0
+    _observers: List[Observer] = []
+
+    def attach(self, observer: Observer) -> None:
+        print("Subject: Attached an observer.")
+        self._observers.append(observer)
+
+    def detach(self, observer: Observer) -> None:
+        print("Subject: Detached an observer.")
+        self._observers.remove(observer)
+
+    def notify(self) -> None:
+        """
+        Trigger an update in each subscriber.
+        """
+        print("Subject: Notifying observers...")
+        for observer in self._observers:
+            observer.update(self)
 
     def get_info_text(self):
         """Opens the info.txt and returns its content."""
@@ -62,12 +93,14 @@ class BackendClass:
                     pdf_files.append(join(root, file))
 
         if pdf_files:
+            self.progressbar_max_value = len(pdf_files)
             pdfs.extend(pdf_files)
             return pdf_files
         else:
-            raise mvc_exc.NoPdfFilesFound('No .pdf, .Pdf or .PDF file(s) found!')
+            self.progressbar_max_value = 0
+            raise NoPdfFilesFound('No .pdf, .Pdf or .PDF file(s) found!')
 
-    def crawl_file(sekf, file, word):
+    def crawl_file(self, file, word):
         """Search single file with the given word. Return list of Results or None."""
         matches = []
 
@@ -78,6 +111,9 @@ class BackendClass:
             pdf_reader = PdfFileReader(pdfFileObj)
 
             for page in range(pdf_reader.numPages):
+                # Update the bar
+                self.progressbar_act_value += 1
+                self.notify()
                 # creating a page object
                 page_obj = pdf_reader.getPage(page)
 
@@ -107,7 +143,7 @@ class BackendClass:
             with open(file=path[0], mode="w", encoding='utf-8') as f:
                 f.write(results)
         else:
-            raise mvc_exc.NoResults("No results to save!")
+            raise NoResults("No results to save!")
 
     def delete_log(self):
         """Delete empty .log file (if existing)  to save memory."""

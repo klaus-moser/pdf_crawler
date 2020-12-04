@@ -7,6 +7,8 @@ class Model:
     def __init__(self):
         """Get default path in start up."""
         self.bk = BackendClass()
+        observer_a = Observer()
+        self.bk.attach(observer_a)
         self.search_path = self.bk.get_default_path()
 
     def get_info_text(self):
