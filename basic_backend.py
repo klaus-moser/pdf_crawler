@@ -1,18 +1,39 @@
-import mvc_exceptions as mvc_exc
+#!/usr/bin/env python3
+
+# Filename: basic_backend.py
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+"""Brings all the necessary functions."""
+
+from __future__ import annotations
+from mvc_exceptions import *
 from pathlib import Path
 from re import findall
-from os import remove, walk
+from os import walk
 from os.path import basename, join, exists
 from PyPDF2 import PdfFileReader
 
-# global variable(s) where we keep the data
-pdfs = list()
-
 
 class BackendClass:
-    def __init__(self):
-        self.progressbar_max_value = 100
-        self.progressbar_value = 0
+    def __init__(self, observer):
+        self.progressbar_max_value = 0
+        self.progressbar_act_value = 0
+        self.observer = observer
+
+    def notify_max_val(self) -> None:
+        """Trigger an update in subscriber."""
+        self.observer.set_progress_bar_max_val(self)
+
+    def notify_update(self) -> None:
+        """Trigger an update in subscriber."""
+        self.observer.update_progress_bar_value(self)
 
     def get_info_text(self):
         """Opens the info.txt and returns its content."""
@@ -52,8 +73,6 @@ class BackendClass:
 
     def walk_folder(self, folder_path):
         """Find and save all .pdf, .Pdf, .PDF files in given path."""
-        global pdfs
-        pdfs.clear()
         pdf_files = []
 
         for root, dirs, files in walk(folder_path):
@@ -62,12 +81,14 @@ class BackendClass:
                     pdf_files.append(join(root, file))
 
         if pdf_files:
-            pdfs.extend(pdf_files)
+            self.progressbar_max_value = len(pdf_files)
+            self.notify_max_val()
             return pdf_files
         else:
-            raise mvc_exc.NoPdfFilesFound('No .pdf, .Pdf or .PDF file(s) found!')
+            self.progressbar_max_value = 0
+            raise NoPdfFilesFound('No .pdf, .Pdf or .PDF file(s) found!')
 
-    def crawl_file(sekf, file, word):
+    def crawl_file(self, file, word):
         """Search single file with the given word. Return list of Results or None."""
         matches = []
 
@@ -78,6 +99,7 @@ class BackendClass:
             pdf_reader = PdfFileReader(pdfFileObj)
 
             for page in range(pdf_reader.numPages):
+
                 # creating a page object
                 page_obj = pdf_reader.getPage(page)
 
@@ -95,9 +117,14 @@ class BackendClass:
     def crawl_files(self, path, word):
         """Crawl directory full of pdf files."""
         matches = []
+        self.progressbar_act_value = 0
+        self.notify_update()
 
         list_of_pdf = self.walk_folder(path)
         for pdf in list_of_pdf:
+            # Update the bar
+            self.progressbar_act_value += 1
+            self.notify_update()
             matches.extend(self.crawl_file(pdf, word))
         return matches
 
@@ -107,22 +134,7 @@ class BackendClass:
             with open(file=path[0], mode="w", encoding='utf-8') as f:
                 f.write(results)
         else:
-            raise mvc_exc.NoResults("No results to save!")
-
-    def delete_log(self):
-        """Delete empty .log file (if existing)  to save memory."""
-        del_ = False
-        file = "crawler.log"
-
-        if exists(file):
-            with open(file=file, mode='r', encoding='utf-8') as f:
-                if not f.readlines():
-                    del_ = True
-            if del_:
-                try:
-                    remove(file)
-                except PermissionError:
-                    pass
+            raise NoResults("No results to save!")
 
 
 if __name__ == '__main__':
