@@ -1,8 +1,22 @@
+#!/usr/bin/env python3
+
+# Filename: basic_backend.py
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+"""Brings all the necessary functions."""
+
 from __future__ import annotations
 from mvc_exceptions import *
 from pathlib import Path
 from re import findall
-from os import remove, walk
+from os import walk
 from os.path import basename, join, exists
 from PyPDF2 import PdfFileReader
 
@@ -121,21 +135,6 @@ class BackendClass:
                 f.write(results)
         else:
             raise NoResults("No results to save!")
-
-    def delete_log(self):
-        """Delete empty .log file (if existing)  to save memory."""
-        del_ = False
-        file = "crawler.log"
-
-        if exists(file):
-            with open(file=file, mode='r', encoding='utf-8') as f:
-                if not f.readlines():
-                    del_ = True
-            if del_:
-                try:
-                    remove(file)
-                except PermissionError:
-                    pass
 
 
 if __name__ == '__main__':
