@@ -6,7 +6,7 @@ This is a mini-application written in Python3.7 using the PyQT framework for a s
 With this app you can either crawl on single .pdf or a whole folder of files for a given key word/phrase.
 It has a real-time progressbar, default setting & you can save the results as simple .txt files.
 
-<img width="315" alt="1" src="https://user-images.githubusercontent.com/60796711/110024709-b98e2400-7d2e-11eb-8685-16e8b6db2f08.PNG"><img width="315" alt="2" src="https://user-images.githubusercontent.com/60796711/110024712-ba26ba80-7d2e-11eb-8c83-1af3d992ad35.PNG"><img width="315" alt="3" src="https://user-images.githubusercontent.com/60796711/110024714-ba26ba80-7d2e-11eb-82d7-1d08a7810ed7.PNG">
+<img width="315" alt="2" src="https://user-images.githubusercontent.com/60796711/110024841-e6423b80-7d2e-11eb-81f2-5e31b1913110.PNG"><img width="315" alt="3" src="https://user-images.githubusercontent.com/60796711/110024844-e6dad200-7d2e-11eb-94f2-c0de49996da2.PNG">
 
 
 ## Installation
