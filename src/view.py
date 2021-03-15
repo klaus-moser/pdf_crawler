@@ -10,7 +10,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""This is the GUI."""
+""" This is the GUI. """
 
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import *
@@ -18,11 +18,12 @@ from basic_backend import BackendClass
 
 
 class View(QMainWindow):
-    """View (GUI)."""
-
+    """
+    View (GUI).
+    """
     def __init__(self):
-        """View initializer."""
         super().__init__()
+
         # Set some main window's properties
         self.width = 628
         self.height = 600
@@ -45,29 +46,46 @@ class View(QMainWindow):
         # Progressbar
         self._create_progress_bar()
 
-    def set_progress_bar_max_val(self, subject: BackendClass):
-        """Set maximum value of progress bar."""
+    def set_progress_bar_max_val(self, subject: BackendClass) -> None:
+        """
+        Set maximum value of progress bar.
+        :param subject: BackendClass object.
+        :return:
+        """
         value = subject.progressbar_max_value
         if value > 0:
             self.progressbar.setMaximum(value)
             self.progressbar.show()
 
-    def update_progress_bar_value(self, subject: BackendClass):
-        """Update the progress bar value."""
+    def update_progress_bar_value(self, subject: BackendClass) -> None:
+        """
+        Update the progress bar value.
+        :param subject: BackendClass object.
+        :return:
+        """
         self.progressbar.setValue(subject.progressbar_act_value)
 
-    def _create_progress_bar(self):
-        """Create  & init the progressbar."""
+    def _create_progress_bar(self) -> None:
+        """
+        Create  & init the progressbar.
+        :return:
+        """
         self.progressbar = QProgressBar(self._centralWidget)
         self.progressbar.setGeometry(105, 561, 300, 30)
         self.progressbar.hide()
 
-    def hide_progressbar(self):
-        """Hide Progress bar."""
+    def hide_progressbar(self) -> None:
+        """
+        Hide Progress bar.
+        :return:
+        """
         self.progressbar.hide()
 
-    def _create_pop_ups(self):
-        """Create & init the pop-up windows."""
+    def _create_pop_ups(self) -> None:
+        """
+        Create & init the pop-up windows.
+        :return:
+        """
         # Info Pop-Up
         self.info_pop_up = QMessageBox(self._centralWidget)
         self.info_pop_up.setWindowTitle("Information")
@@ -79,8 +97,11 @@ class View(QMainWindow):
         self.warning_pop_up.setIcon(QMessageBox.Warning)
         self.warning_pop_up.setStandardButtons(QMessageBox.Close)
 
-    def _set_labels(self):
-        """Set all labels"""
+    def _set_labels(self) -> None:
+        """
+        Set all labels.
+        :return:
+        """
         # Create the label widget(s)
         self.label = QLabel(self._centralWidget)
         self.label_info = QLabel(self._centralWidget)
@@ -97,33 +118,45 @@ class View(QMainWindow):
         self.label_path.setText("Path:")
         self.label_word.setText("Word:")
         # Set logo file
-        self.label.setPixmap(QPixmap("../resources/images/logo.PNG"))
+        self.label.setPixmap(QPixmap("./resources/images/logo.PNG"))
         self.label.setScaledContents(False)
 
-    def _create_path_box(self):
-        """Create Input Box for the path"""
+    def _create_path_box(self) -> None:
+        """
+        Create Input Box for the path.
+        :return:
+        """
         # Create the path widget
         self.path_box = QTextEdit(self._centralWidget)
         # Set some properties
         self.path_box.setGeometry(55, 200, 380, 31)
 
-    def _create_input_box(self):
-        """Create Input Box for the word"""
+    def _create_input_box(self) -> None:
+        """
+        Create Input Box for the word.
+        :return:
+        """
         # Create input box for search word.
         self.input_box_word = QLineEdit(self._centralWidget)
         # Set some properties
         self.input_box_word.setGeometry(55, 240, 380, 31)
 
-    def _create_result_display(self):
-        """Create the box to show the results"""
+    def _create_result_display(self) -> None:
+        """
+        Create the box to show the results.
+        :return:
+        """
         # Create the display widget
         self.display = QPlainTextEdit(self._centralWidget)
         # Set some display's properties
         self.display.setGeometry(10, 280, 611, 271)
         self.display.setReadOnly(True)
 
-    def _create_buttons(self):
-        """Create the buttons."""
+    def _create_buttons(self) -> None:
+        """
+        Create the buttons.
+        :return:
+        """
         self.buttons = {}
         # Button text | position
         buttons = {
@@ -134,16 +167,19 @@ class View(QMainWindow):
             "End": (537, 560, 85, 31),
             "Cancel": (10, 560, 85, 31),
             "Save as .txt": (435, 560, 95, 31),
-            "Clear": (537, 240, 85, 31)
-        }
+            "Clear": (537, 240, 85, 31)}
+
         # Create the buttons
         for btnText, pos in buttons.items():
             self.buttons[btnText] = QPushButton(self._centralWidget)
             self.buttons[btnText].setText(btnText)
             self.buttons[btnText].setGeometry(pos[0], pos[1], pos[2], pos[3])
 
-    def _create_checkboxes(self):
-        """Create all check boxes."""
+    def _create_checkboxes(self) -> None:
+        """
+        Create all check boxes.
+        :return:
+        """
         self.checkbox_file = QCheckBox(self._centralWidget)
         self.checkbox_dir = QCheckBox(self._centralWidget)
         self.checkbox_file.setGeometry(260, 170, 100, 20)
@@ -155,8 +191,12 @@ class View(QMainWindow):
         self.checkbox_dir.setChecked(True)
         self.checkbox_file.setChecked(False)
 
-    def btn_state(self, check_box):
-        """Check the state of the checkboxes."""
+    def btn_state(self, check_box: QCheckBox) -> None:
+        """
+        Check the state of the checkboxes.
+        :param check_box: Class object of QCheckBox.
+        :return:
+        """
         self.set_path_text("")
         if check_box.text() == "Directory":
             if check_box.isChecked():
@@ -170,51 +210,88 @@ class View(QMainWindow):
             else:
                 self.checkbox_dir.setChecked(True)
 
-    def set_display_text(self, text):
-        """Set display's text."""
+    def set_display_text(self, text: str) -> None:
+        """
+        Set display's text.
+        :param text: String to represent.
+        :return:
+        """
         for line in text:
             t = "File: {}\tPage: {}\tMatches: {}".format(line[0], line[1], line[2])
             self.display.appendPlainText(t)
         self.display.setFocus()
 
-    def set_path_text(self, path):
-        """Set the text in the path label."""
+    def set_path_text(self, path: str) -> None:
+        """
+        Set the text in the path label.
+        :param path: String of path directory.
+        :return:
+        """
         self.path_box.setText(path)
 
-    def display_text(self):
-        """Get display's text."""
+    def display_text(self) -> str:
+        """
+        Get display's text.
+        :return: String of the text on display.
+        """
         return self.display.toPlainText()
 
-    def clear_display(self):
-        """Clear the display."""
+    def clear_display(self) -> None:
+        """
+        Clear display.
+        :return:
+        """
         self.display.setPlainText("")
 
-    def show_dir_dialog(self, home_dir):
-        """Show dir dialog."""
+    def show_dir_dialog(self, home_dir: str) -> str:
+        """
+        Show dir dialog.
+        :param home_dir: Home directory of the system.
+        :return: String of the chosen path.
+        """
         return QFileDialog.getExistingDirectory(self, 'Choose folder', home_dir)
 
-    def show_file_dialog(self, home_dir):
-        """Show file dialog."""
+    def show_file_dialog(self, home_dir: str) -> str:
+        """
+        Show file dialog.
+        :param home_dir: Home directory of the system.
+        :return: String of chosen path.
+        """
         filter_ = "Pfd files (*.pdf)"
         path = QFileDialog.getOpenFileName(self, 'Choose folder', home_dir, filter=filter_)
         return path[0]
 
-    def get_path_to_save(self, home_dir):
-        """Dialog to choose a path to save the results."""
+    def get_path_to_save(self, home_dir: str) -> object:
+        """
+        Dialog to choose a path to save the results.
+        :param home_dir: Home directory of the system.
+        :return: Save file.
+        """
         return QFileDialog.getSaveFileName(self, "Save Results", home_dir, filter="*.txt")
 
-    def show_information(self, text):
-        """Pop-Up window to show usage and general information."""
+    def show_information(self, text: str) -> None:
+        """
+        Pop-Up window to show usage and general information.
+        :param text: String of the info-text.
+        :return:
+        """
         self.info_pop_up.setText(text)
         self.info_pop_up.exec_()
 
-    def show_warning(self, state):
-        """Pop-Up to warn user to choose path or word."""
+    def show_warning(self, state: str) -> None:
+        """
+        Pop-Up to warn user to choose path or word.
+        :param state: String of the warning.
+        :return:
+        """
         self.warning_pop_up.setText(state)
         self.warning_pop_up.exec_()
 
-    def get_word_text(self):
-        """Returns the word."""
+    def get_word_text(self) -> str:
+        """
+        Returns the word.
+        :return: String of the found word.
+        """
         return self.input_box_word.text()
 
 
