@@ -18,9 +18,7 @@ from basic_backend import BackendClass
 
 
 class View(QMainWindow):
-    """
-    View (GUI).
-    """
+
     def __init__(self):
         super().__init__()
 

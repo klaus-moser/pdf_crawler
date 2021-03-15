@@ -13,12 +13,13 @@
 """Brings all the necessary functions."""
 
 from __future__ import annotations
-from mvc_exceptions import *
+from os.path import basename, join, exists
+from PyPDF2 import PdfFileReader
 from pathlib import Path
 from re import findall
 from os import walk
-from os.path import basename, join, exists
-from PyPDF2 import PdfFileReader
+
+from mvc_exceptions import *
 
 
 class BackendClass:
