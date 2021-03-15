@@ -80,6 +80,7 @@ class Model:
         Delete .log file if empty.
         :return:
         """
+        # TODO: check delete_log()
         self.bk.delete_log()
 
 
