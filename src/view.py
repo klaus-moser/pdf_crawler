@@ -4,7 +4,7 @@
 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -27,7 +27,7 @@ class View(QMainWindow):
         self.width = 628
         self.height = 600
         self.setWindowTitle("PDF-Crawler")
-        self.setWindowIcon(QIcon("icon.jpg"))
+        self.setWindowIcon(QIcon("./resources/images/icon.jpg"))
         self.setFixedSize(self.width, self.height)
         # Set the central widget and the general layout
         self._centralWidget = QWidget(self)
@@ -97,7 +97,7 @@ class View(QMainWindow):
         self.label_path.setText("Path:")
         self.label_word.setText("Word:")
         # Set logo file
-        self.label.setPixmap(QPixmap("logo.PNG"))
+        self.label.setPixmap(QPixmap("../resources/images/logo.PNG"))
         self.label.setScaledContents(False)
 
     def _create_path_box(self):
