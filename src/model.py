@@ -16,7 +16,6 @@ from basic_backend import *
 
 
 class Model:
-    """The model that fetches all necessary data from the backend."""
 
     def __init__(self, view: object) -> None:
         """
@@ -48,7 +47,7 @@ class Model:
         """
         return self.bk.get_home_dir()
 
-    def crawl_file(self, pdf: str, word: str) -> str:
+    def crawl_file(self, pdf: str, word: str) -> list:
         """
         Crawl a single pdf file.
         :param pdf: String of file-path.
@@ -57,12 +56,12 @@ class Model:
         """
         return self.bk.crawl_file(pdf, word)
 
-    def crawl_files(self, path: str, word: str) -> str:
+    def crawl_files(self, path: str, word: str) -> list:
         """
         Crawl a directory full of pdf files.
         :param path: String of directory of files.
         :param word: String of the word.
-        :return: Result string.
+        :return: Result list.
         """
         return self.bk.crawl_files(path, word)
 
@@ -80,8 +79,9 @@ class Model:
         Delete .log file if empty.
         :return:
         """
-        # TODO: check delete_log()
-        self.bk.delete_log()
+        pass
+        # TODO: implement check delete_log()
+        # self.bk.delete_log()
 
 
 if __name__ == '__main__':

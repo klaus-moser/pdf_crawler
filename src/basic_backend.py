@@ -44,10 +44,10 @@ class BackendClass:
         self.observer.update_progress_bar_value(self)
 
     @staticmethod
-    def get_info_text() -> None:
+    def get_info_text() -> str:
         """
         Opens the info.txt and returns its content.
-        :return:
+        :return: Info text string.
         """
         dir_ = "./resources/files/info.txt"
         text = None
@@ -180,7 +180,7 @@ class BackendClass:
         Save results to .txt file.
         :param path: Path to save file.
         :param results: All results.
-        :return: 
+        :return:
         """
         if path[0] and results:
             with open(file=path[0], mode="w", encoding='utf-8') as f:
