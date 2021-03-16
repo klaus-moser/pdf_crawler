@@ -74,15 +74,6 @@ class Model:
         """
         self.bk.save_results(path, results)
 
-    def delete_log(self) -> None:
-        """
-        Delete .log file if empty.
-        :return:
-        """
-        pass
-        # TODO: implement check delete_log()
-        # self.bk.delete_log()
-
 
 if __name__ == '__main__':
     print(__file__)
