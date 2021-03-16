@@ -4,7 +4,7 @@
 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -17,7 +17,6 @@ from os.path import basename, isfile
 
 
 class Controller(object):
-    """Controller to control the model, view & backend."""
 
     def __init__(self, model, view_):
         """Init the model, view, get default path & connect signals."""
@@ -27,18 +26,28 @@ class Controller(object):
         # Connect signals and slots
         self._connect_signals()
 
-    def _set_default_path(self):
-        """Set the current path as default."""
+    def _set_default_path(self) -> None:
+        """
+        Set the current path as default.
+        :return:
+        """
         self._view.hide_progressbar()
+
         if self.model.search_path:
             self.model.set_default_path(self.model.search_path)
 
-    def _get_default_path(self):
-        """If a default path was set get it."""
+    def _get_default_path(self) -> None:
+        """
+        If a default path was set get it.
+        :return:
+        """
         self._view.set_path_text(basename(self.model.search_path))
 
-    def _crawl(self):
-        """Start Crawling."""
+    def _crawl(self) -> None:
+        """
+        Start Crawling.
+        :return:
+        """
         path = self.model.search_path
         word = self._view.get_word_text()
 
@@ -64,10 +73,15 @@ class Controller(object):
             finally:
                 pass
 
-    def _browse(self):
-        """Select the search path."""
+    def _browse(self) -> None:
+        """
+        Select the search path.
+        :return:
+        """
         self._view.hide_progressbar()
+
         home_dir = self.model.get_home_dir()
+
         try:
             if self._view.checkbox_dir.isChecked():
                 re = self._view.show_dir_dialog(home_dir)
@@ -79,41 +93,60 @@ class Controller(object):
         except mvc_exc.FileDialogError as err:
             self._view.set_display_text(err)
 
-    def _show_info(self):
-        """Show the Information Pop-Up."""
+    def _show_info(self) -> None:
+        """
+        Show the Information Pop-Up.
+        :return:
+        """
         self._view.hide_progressbar()
+
         try:
             text = self.model.get_info_text()
             self._view.show_information(text)
         except FileNotFoundError as err:
             self._view.set_display_text(err)
 
-    def _clear_display(self):
-        """Clear the result display."""
+    def _clear_display(self) -> None:
+        """
+        Clear the result display.
+        :return:
+        """
         self._view.hide_progressbar()
         self._view.clear_display()
 
-    def _toggle_checkbox(self):
-        """Connect to View when checkbox is toggled & clear current path."""
+    def _toggle_checkbox(self) -> None:
+        """
+        Connect to View when checkbox is toggled & clear current path.
+        :return:
+        """
         self._view.hide_progressbar()
         self._view.btn_state(self._view.checkbox_file)
         self.model.search_path = ""
 
-    def _state_changed_checkbox(self):
-        """Connect to View when checkbox-state is changed & clear current path."""
+    def _state_changed_checkbox(self) -> None:
+        """
+        Connect to View when checkbox-state is changed & clear current path.
+        :return:
+        """
         self._view.hide_progressbar()
         self._view.btn_state(self._view.checkbox_dir)
         self.model.search_path = ""
 
-    def _save_results(self):
-        """Save results to .txt file."""
+    def _save_results(self) -> None:
+        """
+        Save results to .txt file."
+        :return:
+        """
         self._view.hide_progressbar()
         text = self._view.display_text()
         path = self._view.get_path_to_save(self.model.get_home_dir())
         self.model.save_results(path, text)
 
-    def _connect_signals(self):
-        """Connect signals and slots."""
+    def _connect_signals(self) -> None:
+        """
+        Connect signals and slots.
+        :return:
+        """
         self._view.buttons["Browse"].clicked.connect(self._browse)
         self._view.buttons["Set Default"].clicked.connect(self._set_default_path)
         self._view.buttons["Start"].clicked.connect(self._crawl)
