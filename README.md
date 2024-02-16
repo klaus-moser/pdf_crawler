@@ -24,7 +24,7 @@ It has a real-time progressbar, default setting & you can save the results as si
 
 #### 3.  Download or clone code
 
-- Download: *https://github.com/don-kanaille/pdf_crawler.git*
+- Download: *https://github.com/klaus-moser/pdf_crawler.git*
 - clone: `git clone https://github.com/don-kanaille/pdf_crawler.git`
 
 #### 4. Install requirements
